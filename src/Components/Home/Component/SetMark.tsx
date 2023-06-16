@@ -1,23 +1,46 @@
 import RadioGroup from '@/Common/RadioGroup';
 import Radio from '@/Common/Radio';
 import { useState } from 'react';
-import styles from './SetMark.module.scss';
+import './SetMark.scss';
 
-export default function SetMark() {
+interface Mark {
+  display: string;
+  selling: string;
+  exposure: string;
+  category: string;
+  recommand: boolean;
+  newProduct: boolean;
+}
+interface Props {
+  setMark: (key: Mark) => void;
+}
+
+export default function SetMark({ setMark }: Props) {
   const [display, setDisplay] = useState('F');
   const [selling, setSelling] = useState('F');
   const [exposure, setExposure] = useState('A');
-  const [a, setA] = useState(false);
+  const [category, setCategory] = useState('');
+  const [recommand, setRecommand] = useState(false);
+  const [newProduct, setNewProduct] = useState(false);
+
+  setMark({
+    display: display,
+    selling: selling,
+    exposure: exposure,
+    category: category,
+    recommand: recommand,
+    newProduct: newProduct,
+  });
   return (
-    <tbody className={styles.wrapper}>
+    <tbody className="wrapper">
       <tr>
         <th>진열상태</th>
         <td>
           <RadioGroup value={display} onChange={setDisplay}>
-            <Radio name="mark" value="T">
+            <Radio name="display" value="T">
               진열함
             </Radio>
-            <Radio name="mark" value="F">
+            <Radio name="display" value="F">
               진열안함
             </Radio>
           </RadioGroup>
@@ -28,10 +51,10 @@ export default function SetMark() {
         <th>판매상태</th>
         <td>
           <RadioGroup value={selling} onChange={setSelling}>
-            <Radio name="sell" value="T">
+            <Radio name="selling" value="T">
               판매함
             </Radio>
-            <Radio name="sell" value="F">
+            <Radio name="selling" value="F">
               판매안함
             </Radio>
           </RadioGroup>
@@ -40,24 +63,21 @@ export default function SetMark() {
 
       <tr>
         <th>상품분류 선택</th>
-        <td style={{ display: 'flex' }}>
-          <div
-            onClick={() => {
-              setA(!a);
+        <td>
+          <ul
+            onClick={(e: React.MouseEvent) => {
+              setCategory(
+                (e.target as HTMLUListElement).getAttribute('value') as string
+              );
             }}
           >
-            국내도서
-          </div>
-          {a && (
-            <ul>
-              <li>예술</li>
-              <li>아동</li>
-              <li>자기계발</li>
-              <li>비문학</li>
-              <li>소설/시/희극</li>
-              <li>경제경영</li>
-            </ul>
-          )}
+            <li value={45}>예술</li>
+            <li value={46}>아동</li>
+            <li value={47}>자기계발</li>
+            <li value={48}>비문학</li>
+            <li value={49}>소설/시/희극</li>
+            <li value={50}>경제경영</li>
+          </ul>
         </td>
       </tr>
 
@@ -70,7 +90,12 @@ export default function SetMark() {
                 <th>추천상품</th>
                 <td>
                   <label>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      onChange={(e) => {
+                        setRecommand(e.target.checked);
+                      }}
+                    />
                     진열함
                   </label>
                 </td>
@@ -79,7 +104,12 @@ export default function SetMark() {
                 <th>신상품</th>
                 <td>
                   <label>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      onChange={(e) => {
+                        setNewProduct(e.target.checked);
+                      }}
+                    />
                     진열함
                   </label>
                 </td>

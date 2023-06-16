@@ -5,9 +5,6 @@ const { VITE_CAFE24_ADMIN_URL } = import.meta.env;
 
 const ajax = axios.create({
   baseURL: VITE_CAFE24_ADMIN_URL,
-  params: {
-    since_product_no: 20,
-  },
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
   },

@@ -1,4 +1,2 @@
-declare const classNames: {
-  readonly wrapper: "wrapper";
-};
+declare const classNames: {};
 export = classNames;

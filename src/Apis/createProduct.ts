@@ -10,8 +10,38 @@ const ajax = axios.create({
     'Content-Type': 'application/json',
   },
   data: {
-    product_name: '',
-    price: '',
-    supply_price: '',
+    shop_no: 1,
+    request: {
+      product_name: '',
+      price: '',
+      supply_price: '',
+    },
   },
 });
+
+export async function createProduct(info: ProductInfo) {
+  try {
+    const res = await ajax.post('/products', {
+      request: {
+        display: info.display,
+        selling: info.selling,
+        product_name: info.product_name,
+        supply_product_name: info.supply_product_name,
+        add_category_no: info.add_category_no, // 배열데이터- 추천상품 진열 여부
+        product_condition: info.product_condition,
+        internal_product_name: info.internal_product_name,
+        price: info.price,
+        supply_price: info.supply_price,
+        retail_price: info.retail_price,
+        description: info.description,
+        summary_description: info.summary_description,
+        simple_description: info.simple_description,
+        product_tag: info.product_tag,
+      },
+    });
+    console.log(res);
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
+}
