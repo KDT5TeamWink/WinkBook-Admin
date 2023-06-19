@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
 import './SetPrice.scss';
 
-interface Price {
-  [key: string]: string;
-  price: string;
-  retail: string;
-  supply: string;
-}
 interface Props {
   setPrice: (param: Price) => void;
+  res?: Price;
 }
 
-export default function SetPrice({ setPrice }: Props) {
+export default function SetPrice({ setPrice, res }: Props) {
   const [productPrice, setProductPrice] = useState<Price>({} as Price);
 
+  useEffect(() => {
+    if (res) {
+      setProductPrice({ ...res });
+      console.log(res);
+    }
+  }, [res]);
   useEffect(() => {
     setPrice(productPrice);
   }, [productPrice]);
@@ -24,21 +25,27 @@ export default function SetPrice({ setPrice }: Props) {
         const name = e.target.getAttribute('name') as string;
         const property = {} as Price;
 
-        console.log(e.target.nodeName === 'INPUT');
-        if (isNaN(+e.target.value)) {
-          alert('숫자만 입력하세요!');
-          e.target.value = '';
-          return;
-        }
-        property[name] = e.target.value;
+        if (e.target instanceof HTMLInputElement) {
+          if (isNaN(+e.target.value)) {
+            alert('숫자만 입력하세요!');
+            e.target.value = '';
+            return;
+          }
+          property[name] = e.target.value;
 
-        setProductPrice({ ...productPrice, ...property });
+          setProductPrice({ ...productPrice, ...property });
+        }
       }}
     >
       <tr>
         <th>소비자가</th>
         <td>
-          <input type="text" name="retail" pattern="[0-9]" />
+          <input
+            type="text"
+            name="retail"
+            pattern="[0-9]"
+            defaultValue={productPrice.retail}
+          />
           KRW
         </td>
       </tr>
@@ -48,7 +55,7 @@ export default function SetPrice({ setPrice }: Props) {
           공급가<span className="required">필수</span>
         </th>
         <td>
-          <input type="text" name="supply" />
+          <input type="text" name="supply" defaultValue={productPrice.supply} />
           KRW
         </td>
       </tr>
@@ -63,7 +70,11 @@ export default function SetPrice({ setPrice }: Props) {
               <tr>
                 <th>판매가</th>
                 <td>
-                  <input type="text" name="price" />
+                  <input
+                    type="text"
+                    name="price"
+                    defaultValue={productPrice.price}
+                  />
                   KRW
                 </td>
               </tr>

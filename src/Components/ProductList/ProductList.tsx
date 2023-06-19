@@ -1,0 +1,114 @@
+import ajax from '@/Apis/adminAuth';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+
+export default function ProductList() {
+  const [list, setList] = useState<ProductInfo[]>();
+  const [offset, setOffset] = useState(0);
+  const [totalNum, setTotalNum] = useState();
+  const [pagination, setPagination] = useState([1]);
+
+  async function getList() {
+    const res = await ajax.get('/products', {
+      params: {
+        limit: 10,
+        offset: offset * 10,
+      },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return res;
+  }
+  async function getTotalNum() {
+    try {
+      const res = await ajax.get('/products/count');
+      setTotalNum(res.data.count);
+      setPagination(new Array(Math.round(res.data.count / 10)).fill(1));
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async function deleteItem(productNo: string) {
+    try {
+      const res = await ajax.delete(`/products/${productNo}`);
+      alert(`상품번호 ${productNo}이 삭제되었습니다.`);
+      location.reload();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    (async () => {
+      const res = await getList();
+      console.log(res);
+      setList(res.data.products);
+      getTotalNum();
+    })();
+  }, []);
+  useEffect(() => {
+    (async () => {
+      const res = await getList();
+      setList(res.data.products);
+    })();
+  }, [offset]);
+
+  return (
+    <>
+      <h3>{totalNum}개의 상품이 있습니다.</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>상품코드</th>
+            <th>상품명</th>
+            <th>판매가</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody
+          onClick={(e) => {
+            if (e.target instanceof HTMLButtonElement) {
+              console.log(e.target.value);
+              if (confirm('정말 삭제하시겠습니까?')) {
+                deleteItem(e.target.value);
+              }
+            }
+          }}
+        >
+          {list &&
+            list.map((v) => (
+              <tr key={v.product_code}>
+                <td>{v.product_code}</td>
+                <td>
+                  <Link to={`/edit/${v.product_no}`}>
+                    <img src={v.tiny_image} alt="" />
+                    <h6>{v.product_name}</h6>
+                  </Link>
+                </td>
+                <td>{v.price}</td>
+                <td>
+                  <button value={v.product_no}>delete</button>
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+      <ul
+        style={{ display: 'flex', gap: '10px' }}
+        onClick={(e) => {
+          if (e.target instanceof HTMLLIElement) {
+            setOffset(e.target.value);
+          }
+        }}
+      >
+        {pagination.map((_, i) => (
+          <li key={i} style={{ width: '50px' }} value={i}>
+            {i + 1}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}

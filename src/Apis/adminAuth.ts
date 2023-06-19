@@ -14,8 +14,10 @@ ajax.interceptors.request.use(
   async (config) => {
     const key = new RegExp(`accessToken=([^;]*)`);
     console.log('config', config);
-    if (!key.test(document.cookie)) {
+    if (!key.test(document.cookie) && !localStorage.getItem('refreshToken')) {
       await getToken();
+    } else if (!key.test(document.cookie)) {
+      await refreshToken();
     }
     config.headers['Authorization'] = `Bearer ${
       key.test(document.cookie) ? RegExp.$1 : ''
@@ -40,11 +42,13 @@ ajax.interceptors.response.use(
     if (error.response?.status === 401) {
       const key = new RegExp(`accessToken=([^;]*)`);
 
+      /*
       if (!key.test(document.cookie) && !localStorage.getItem('refreshToken')) {
         await getToken();
       } else {
         await refreshToken();
       }
+      */
       error.config.headers = {
         Authorization: `Bearer ${key.test(document.cookie) ? RegExp.$1 : ''}`,
       };

@@ -59,6 +59,10 @@ interface ShoppingRate {
 }
 
 interface ProductInfo {
+  /** 상품번호
+
+상품의 고유한 일련 번호. 해당 쇼핑몰 내에서 상품 번호는 중복되지 않음. */
+  product_no?: number;
   /** 진열상태
 
 T : 진열함
@@ -93,6 +97,10 @@ DEFAULT N */
 
 분류 번호를 사용하여 진열을 원하는 카테고리에 상품 등록 */
   add_category_no?: Category[];
+  /** 상품코드
+
+시스템이 상품에 부여한 코드. 해당 쇼핑몰 내에서 상품코드는 중복되지 않음. */
+  product_code?: string;
   /** 자체상품 코드
 
 사용자가 상품에 부여 가능한 코드. 재고 관리등의 이유로 자체적으로 상품을 관리 하고 있는 경우 사용함. */
@@ -163,6 +171,10 @@ DEFAULT A */
   image_upload_type?: string;
   /** 상세이미지 */
   detail_image?: string;
+  /** 작은목록이미지
+
+최근 본 상품 영역에 표시되는 상품의 목록 이미지. */
+  tiny_image?: string;
   /** 제조사 코드
 
 DEFAULT M0000000 */

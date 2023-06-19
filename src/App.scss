@@ -25,3 +25,22 @@ textarea {
   background-color: red;
   color: white;
 }
+table {
+  border-collapse: collapse;
+
+  tr {
+    border: 1px solid;
+  }
+
+  td {
+    padding: 10px;
+  }
+}
+.create {
+  padding: 10px;
+  border: 0;
+  border-radius: 5px;
+  background-color: blue;
+  color: white;
+  cursor: pointer;
+}

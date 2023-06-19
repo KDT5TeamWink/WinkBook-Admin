@@ -1,16 +1,8 @@
 import RadioGroup from '@/Common/RadioGroup';
 import Radio from '@/Common/Radio';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './SetMark.scss';
 
-interface Mark {
-  display: string;
-  selling: string;
-  exposure: string;
-  category: string;
-  recommand: string;
-  newProduct: string;
-}
 interface Props {
   setMark: (key: Mark) => void;
   res?: {
@@ -27,33 +19,34 @@ export default function SetMark({ setMark, res }: Props) {
   const [display, setDisplay] = useState('F');
   const [selling, setSelling] = useState('F');
   const [exposure, setExposure] = useState('A');
-  const [category, setCategory] = useState('');
-  const [recommand, setRecommand] = useState('F');
-  const [newProduct, setNewProduct] = useState('F');
+  const mark = useRef({} as Mark);
 
   useEffect(() => {
     if (res) {
-      setDisplay(res.display);
-      setSelling(res.selling);
-      setExposure(res.exposure);
-      setCategory(res.category);
-      setRecommand(res.category);
-      setNewProduct(res.newProduct);
+      mark.current = res;
     }
-  }, []);
+  }, [res]);
 
   useEffect(() => {
-    setMark({
-      display: display,
-      selling: selling,
-      exposure: exposure,
-      category: category,
-      recommand: recommand,
-      newProduct: newProduct,
-    });
-  }, [display, selling, exposure, category, recommand, newProduct]);
+    setMark(mark.current);
+  }, [mark]);
+
   return (
-    <tbody className="wrapper">
+    <tbody
+      className="wrapper"
+      onChange={(e) => {
+        if (e.target instanceof HTMLInputElement) {
+          const type = e.target.getAttribute('type');
+          if (type === 'radio') {
+            mark.current[e.target.getAttribute('name') as string] =
+              e.target.value;
+          } else if (type === 'checkbox') {
+            mark.current[e.target.id] = e.target.checked ? 'T' : 'F';
+          }
+        }
+        console.log(mark.current);
+      }}
+    >
       <tr>
         <th>진열상태</th>
         <td>
@@ -88,13 +81,16 @@ export default function SetMark({ setMark, res }: Props) {
         </th>
         <td>
           <ul
+            id="category"
             onClick={(e: React.MouseEvent) => {
-              setCategory(`${(e.target as HTMLUListElement).value}`);
-              console.log(e.currentTarget.children);
-              for (let i = 0; i < e.currentTarget.children.length; i++) {
-                e.currentTarget.children[i].classList.remove('selected');
+              if (e.target instanceof HTMLLIElement) {
+                //setCategory(`${e.target.value}`);
+                mark.current[e.currentTarget.id] = e.target.value + '';
+                for (let i = 0; i < e.currentTarget.children.length; i++) {
+                  e.currentTarget.children[i].classList.remove('selected');
+                }
+                e.target.classList.add('selected');
               }
-              e.target.classList.add('selected');
             }}
           >
             <li value={45}>예술</li>
@@ -116,12 +112,7 @@ export default function SetMark({ setMark, res }: Props) {
                 <th>추천상품</th>
                 <td>
                   <label>
-                    <input
-                      type="checkbox"
-                      onChange={(e) => {
-                        setRecommand(e.target.checked ? 'T' : 'F');
-                      }}
-                    />
+                    <input type="checkbox" id="recommand" />
                     진열함
                   </label>
                 </td>
@@ -130,12 +121,7 @@ export default function SetMark({ setMark, res }: Props) {
                 <th>신상품</th>
                 <td>
                   <label>
-                    <input
-                      type="checkbox"
-                      onChange={(e) => {
-                        setNewProduct(e.target.checked ? 'T' : 'F');
-                      }}
-                    />
+                    <input type="checkbox" id="newProduct" />
                     진열함
                   </label>
                 </td>

@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent, useCallback } from 'react';
+import { useState, useEffect, ChangeEvent, useCallback, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Input from '@/Common/Input';
@@ -39,56 +39,51 @@ const formats = [
   'image',
 ];
 
-interface Info {
-  product_name: string;
-  internal_product_name?: string;
-  supply_product_name?: string;
-  simple_description?: string;
-  description?: string;
-  product_tag?: string[];
-}
-
 interface Props {
   setInfo: (key: Info) => void;
+  res?: Info;
 }
 
-export default function SetProductInfo({ setInfo }: Props) {
+export default function SetProductInfo({ setInfo, res }: Props) {
   const [product_name, setProduct_name] = useState<string>();
   const [internal_product_name, setInternal_product_name] = useState<string>();
   const [supply_product_name, setSupply_product_name] = useState<string>();
   const [simple_description, setSimple_description] = useState<string>();
-  const [description, setDescription] = useState<string>();
-  const [product_tag, setProduct_tag] = useState<string[]>();
+  const info = useRef({} as Info);
 
   useEffect(() => {
-    if (product_name) {
-      setInfo({
-        product_name: product_name,
-        internal_product_name: internal_product_name,
-        supply_product_name: supply_product_name,
-        simple_description: simple_description,
-        description: description,
-        product_tag: product_tag,
-      });
+    if (res) {
+      info.current = res;
+      console.log(res, info.current);
     }
-  }, [
-    product_name,
-    internal_product_name,
-    supply_product_name,
-    simple_description,
-    description,
-    product_tag,
-  ]);
+  }, [res]);
+  useEffect(() => {
+    setInfo(info.current);
+  }, [info]);
 
-  const contents = useCallback(
-    (content: string) => {
-      setDescription(content);
-    },
-    [description]
-  );
+  const contents = useCallback((content: string) => {
+    info.current['description'] = content;
+  }, []);
 
   return (
-    <tbody className="info">
+    <tbody
+      className="info"
+      onBlur={(e) => {
+        if (e.target instanceof HTMLInputElement) {
+          console.log(e.target.id);
+          info.current[e.target.id] = e.target.value;
+        } else if (e.target instanceof HTMLTextAreaElement) {
+          if (e.target.id === 'summary_description') {
+            info.current[e.target.id] = e.target.value;
+          } else {
+            info.current[e.target.id] = e.target.value
+              .replace(/\s/gi, '')
+              .split(',');
+          }
+        }
+        console.log('info', info.current);
+      }}
+    >
       <tr>
         <th>
           상품명<span className="required">필수</span>
@@ -100,6 +95,7 @@ export default function SetProductInfo({ setInfo }: Props) {
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
               setProduct_name(e.target.value);
             }}
+            id="product_name"
           />
         </td>
       </tr>
@@ -113,6 +109,7 @@ export default function SetProductInfo({ setInfo }: Props) {
             onChange={(e) => {
               setInternal_product_name(e.target.value);
             }}
+            id="internal_product_name"
           />
         </td>
       </tr>
@@ -126,6 +123,7 @@ export default function SetProductInfo({ setInfo }: Props) {
             onChange={(e) => {
               setSupply_product_name(e.target.value);
             }}
+            id="supply_product_name"
           />
         </td>
       </tr>
@@ -139,6 +137,7 @@ export default function SetProductInfo({ setInfo }: Props) {
             onChange={(e) => {
               setSimple_description(e.target.value);
             }}
+            id="summary_description"
           />
         </td>
       </tr>
@@ -146,7 +145,7 @@ export default function SetProductInfo({ setInfo }: Props) {
       <tr>
         <th>상품 간략설명</th>
         <td>
-          <textarea name="" id="" cols={20} rows={3}></textarea>
+          <textarea name="" id="simple_description" cols={20} rows={3} />
         </td>
       </tr>
 
@@ -155,6 +154,7 @@ export default function SetProductInfo({ setInfo }: Props) {
         <td>
           <ReactQuill
             onChange={contents}
+            defaultValue={res?.description}
             modules={modules}
             formats={formats}
             style={{ width: '1000px', height: '500px', paddingBottom: '50px' }}
@@ -162,20 +162,10 @@ export default function SetProductInfo({ setInfo }: Props) {
         </td>
       </tr>
 
-      {/* 검색어설정 */}
       <tr>
         <th>검색어 설정</th>
         <td>
-          <textarea
-            name=""
-            id=""
-            cols={20}
-            rows={3}
-            onBlur={(e) => {
-              //console.log(e.target.value.replace(/\s/gi, '').split(','));
-              setProduct_tag(e.target.value.replace(/\s/gi, '').split(','));
-            }}
-          ></textarea>
+          <textarea name="" id="Product_tag" cols={20} rows={3} />
         </td>
       </tr>
     </tbody>

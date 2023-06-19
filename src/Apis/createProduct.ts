@@ -42,9 +42,10 @@ export async function createProduct(info: ProductInfo) {
         image_upload_type: info.image_upload_type, // A
       },
     });
-    console.log(res);
     return res;
   } catch (err) {
-    console.log(err);
+    if (axios.isAxiosError(err)) {
+      return err.response?.data.error;
+    }
   }
 }
