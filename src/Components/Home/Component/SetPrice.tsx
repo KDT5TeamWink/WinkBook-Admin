@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import './SetPrice.scss';
 
 interface Price {
   [key: string]: string;
@@ -16,12 +17,14 @@ export default function SetPrice({ setPrice }: Props) {
   useEffect(() => {
     setPrice(productPrice);
   }, [productPrice]);
+
   return (
     <tbody
       onBlur={(e) => {
         const name = e.target.getAttribute('name') as string;
         const property = {} as Price;
 
+        console.log(e.target.nodeName === 'INPUT');
         if (isNaN(+e.target.value)) {
           alert('숫자만 입력하세요!');
           e.target.value = '';

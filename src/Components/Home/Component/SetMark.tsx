@@ -1,6 +1,6 @@
 import RadioGroup from '@/Common/RadioGroup';
 import Radio from '@/Common/Radio';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './SetMark.scss';
 
 interface Mark {
@@ -8,29 +8,50 @@ interface Mark {
   selling: string;
   exposure: string;
   category: string;
-  recommand: boolean;
-  newProduct: boolean;
+  recommand: string;
+  newProduct: string;
 }
 interface Props {
   setMark: (key: Mark) => void;
+  res?: {
+    display: string;
+    selling: string;
+    exposure: string;
+    category: string;
+    recommand: string;
+    newProduct: string;
+  };
 }
 
-export default function SetMark({ setMark }: Props) {
+export default function SetMark({ setMark, res }: Props) {
   const [display, setDisplay] = useState('F');
   const [selling, setSelling] = useState('F');
   const [exposure, setExposure] = useState('A');
   const [category, setCategory] = useState('');
-  const [recommand, setRecommand] = useState(false);
-  const [newProduct, setNewProduct] = useState(false);
+  const [recommand, setRecommand] = useState('F');
+  const [newProduct, setNewProduct] = useState('F');
 
-  setMark({
-    display: display,
-    selling: selling,
-    exposure: exposure,
-    category: category,
-    recommand: recommand,
-    newProduct: newProduct,
-  });
+  useEffect(() => {
+    if (res) {
+      setDisplay(res.display);
+      setSelling(res.selling);
+      setExposure(res.exposure);
+      setCategory(res.category);
+      setRecommand(res.category);
+      setNewProduct(res.newProduct);
+    }
+  }, []);
+
+  useEffect(() => {
+    setMark({
+      display: display,
+      selling: selling,
+      exposure: exposure,
+      category: category,
+      recommand: recommand,
+      newProduct: newProduct,
+    });
+  }, [display, selling, exposure, category, recommand, newProduct]);
   return (
     <tbody className="wrapper">
       <tr>
@@ -62,13 +83,18 @@ export default function SetMark({ setMark }: Props) {
       </tr>
 
       <tr>
-        <th>상품분류 선택</th>
+        <th>
+          상품분류 선택<span className="required">필수</span>
+        </th>
         <td>
           <ul
             onClick={(e: React.MouseEvent) => {
-              setCategory(
-                (e.target as HTMLUListElement).getAttribute('value') as string
-              );
+              setCategory(`${(e.target as HTMLUListElement).value}`);
+              console.log(e.currentTarget.children);
+              for (let i = 0; i < e.currentTarget.children.length; i++) {
+                e.currentTarget.children[i].classList.remove('selected');
+              }
+              e.target.classList.add('selected');
             }}
           >
             <li value={45}>예술</li>
@@ -93,7 +119,7 @@ export default function SetMark({ setMark }: Props) {
                     <input
                       type="checkbox"
                       onChange={(e) => {
-                        setRecommand(e.target.checked);
+                        setRecommand(e.target.checked ? 'T' : 'F');
                       }}
                     />
                     진열함
@@ -107,7 +133,7 @@ export default function SetMark({ setMark }: Props) {
                     <input
                       type="checkbox"
                       onChange={(e) => {
-                        setNewProduct(e.target.checked);
+                        setNewProduct(e.target.checked ? 'T' : 'F');
                       }}
                     />
                     진열함

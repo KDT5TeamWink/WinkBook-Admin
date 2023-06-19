@@ -2,6 +2,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  list-style: none;
 }
 .wrapper {
   background-color: rosybrown;
@@ -12,23 +13,15 @@ input[type='text'] {
   height: 28px;
   padding: 0 10px;
 }
+.info {
+  input[type='text'] {
+    width: 50%;
+  }
+}
 textarea {
   width: 100%;
 }
 .required {
   background-color: red;
   color: white;
-}
-.table {
-  display: flex;
-  border: 1px solid;
-
-  tr {
-    display: flex;
-    flex-direction: column;
-    width: 200px;
-  }
-  td {
-    text-align: right;
-  }
 }

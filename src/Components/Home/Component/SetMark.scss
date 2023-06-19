@@ -1,1 +1,14 @@
+td {
+  ul {
+    width: 100%;
 
+    li {
+      width: max-content;
+      padding: 10px;
+      cursor: pointer;
+    }
+  }
+  li.selected {
+    background-color: orange;
+  }
+}

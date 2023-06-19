@@ -1,124 +1,145 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent, useCallback } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import Input from '@/Common/Input';
+
+const modules = {
+  toolbar: [
+    [{ font: [] }],
+    [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [
+      { list: 'ordered' },
+      { list: 'bullet' },
+      { indent: '-1' },
+      { indent: '+1' },
+    ],
+    ['link', 'image'],
+    ['clean'],
+  ],
+};
+
+const formats = [
+  'font',
+  'size',
+  'header',
+  'color',
+  'background',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'blockquote',
+  'list',
+  'bullet',
+  'indent',
+  'link',
+  'image',
+];
+
+interface Info {
+  product_name: string;
+  internal_product_name?: string;
+  supply_product_name?: string;
+  simple_description?: string;
+  description?: string;
+  product_tag?: string[];
+}
 
 interface Props {
-  setInfo: (key: string) => void;
+  setInfo: (key: Info) => void;
 }
 
 export default function SetProductInfo({ setInfo }: Props) {
-  const [product_name, setProduct_name] = useState('');
-  const [titleAdmin, setTitleAdmin] = useState('');
-  const [titleSupply, setTitleSupply] = useState('');
+  const [product_name, setProduct_name] = useState<string>();
+  const [internal_product_name, setInternal_product_name] = useState<string>();
+  const [supply_product_name, setSupply_product_name] = useState<string>();
+  const [simple_description, setSimple_description] = useState<string>();
+  const [description, setDescription] = useState<string>();
+  const [product_tag, setProduct_tag] = useState<string[]>();
 
   useEffect(() => {
-    setInfo(product_name);
-  }, [product_name]);
+    if (product_name) {
+      setInfo({
+        product_name: product_name,
+        internal_product_name: internal_product_name,
+        supply_product_name: supply_product_name,
+        simple_description: simple_description,
+        description: description,
+        product_tag: product_tag,
+      });
+    }
+  }, [
+    product_name,
+    internal_product_name,
+    supply_product_name,
+    simple_description,
+    description,
+    product_tag,
+  ]);
 
-  function contents(content: string) {
-    console.log(content);
-  }
+  const contents = useCallback(
+    (content: string) => {
+      setDescription(content);
+    },
+    [description]
+  );
 
-  const modules = {
-    toolbar: [
-      [{ font: [] }],
-      [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [
-        { list: 'ordered' },
-        { list: 'bullet' },
-        { indent: '-1' },
-        { indent: '+1' },
-      ],
-      ['link', 'image'],
-      ['clean'],
-    ],
-  };
-
-  const formats = [
-    'font',
-    'size',
-    'header',
-    'color',
-    'background',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'indent',
-    'link',
-    'image',
-  ];
-
-  const aa = useRef<HTMLSelectElement>(null);
-  useEffect(() => {
-    console.log(aa.current?.value);
-  }, []);
   return (
-    <tbody>
+    <tbody className="info">
       <tr>
         <th>
           상품명<span className="required">필수</span>
         </th>
         <td>
-          <input
-            type="text"
+          <Input
             value={product_name}
-            onChange={(e) => {
+            maxLength={250}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
               setProduct_name(e.target.value);
             }}
           />
-          {`[ ${product_name.length} / 250 ]`}
         </td>
       </tr>
 
       <tr>
         <th>상품명(관리용)</th>
         <td>
-          <input
-            type="text"
-            value={titleAdmin}
+          <Input
+            value={internal_product_name}
+            maxLength={50}
             onChange={(e) => {
-              setTitleAdmin(e.target.value);
+              setInternal_product_name(e.target.value);
             }}
           />
-          {`[ ${titleAdmin.length} / 50 ]`}
         </td>
       </tr>
 
       <tr>
         <th>공급사 상품명</th>
         <td>
-          <input
-            type="text"
-            value={titleSupply}
+          <Input
+            value={supply_product_name}
+            maxLength={250}
             onChange={(e) => {
-              setTitleSupply(e.target.value);
+              setSupply_product_name(e.target.value);
             }}
           />
-          {`[ ${titleSupply.length} / 250 ]`}
-        </td>
-      </tr>
-
-      <tr>
-        <th>상품상태</th>
-        <td>
-          <select name="" id="" ref={aa}>
-            <option value="N">신상품</option>
-            <option value="U">중고상품</option>
-          </select>
         </td>
       </tr>
 
       <tr>
         <th>상품 요약설명</th>
         <td>
-          <input type="text" />
+          <Input
+            value={simple_description}
+            maxLength={255}
+            onChange={(e) => {
+              setSimple_description(e.target.value);
+            }}
+          />
         </td>
       </tr>
 
@@ -151,7 +172,8 @@ export default function SetProductInfo({ setInfo }: Props) {
             cols={20}
             rows={3}
             onBlur={(e) => {
-              console.log(e.target.value.replaceAll(' ', '').split(','));
+              //console.log(e.target.value.replace(/\s/gi, '').split(','));
+              setProduct_tag(e.target.value.replace(/\s/gi, '').split(','));
             }}
           ></textarea>
         </td>
