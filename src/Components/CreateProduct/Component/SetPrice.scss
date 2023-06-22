@@ -1,11 +1,11 @@
 .table {
   display: flex;
-  border: 1px solid;
 
   tr {
     display: flex;
     flex-direction: column;
     width: 200px;
+    border: 1px solid;
   }
   td {
     text-align: right;

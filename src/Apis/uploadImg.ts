@@ -6,7 +6,7 @@ export async function getImgLink(formdata: FormData) {
     const res = axios.post('/imgur', formdata, {
       headers: {
         Authorization: `Client-ID ${VITE_IMGUR_ID}`,
-        Accept: 'application/son',
+        Accept: 'application/json',
       },
     });
     return res;

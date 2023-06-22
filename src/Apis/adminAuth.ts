@@ -42,13 +42,6 @@ ajax.interceptors.response.use(
     if (error.response?.status === 401) {
       const key = new RegExp(`accessToken=([^;]*)`);
 
-      /*
-      if (!key.test(document.cookie) && !localStorage.getItem('refreshToken')) {
-        await getToken();
-      } else {
-        await refreshToken();
-      }
-      */
       error.config.headers = {
         Authorization: `Bearer ${key.test(document.cookie) ? RegExp.$1 : ''}`,
       };

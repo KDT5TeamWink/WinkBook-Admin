@@ -11,7 +11,7 @@ export default function SetPrice({ setPrice, res }: Props) {
 
   useEffect(() => {
     if (res) {
-      setProductPrice({ ...res });
+      setProductPrice(res);
       console.log(res);
     }
   }, [res]);
@@ -45,6 +45,7 @@ export default function SetPrice({ setPrice, res }: Props) {
             name="retail"
             pattern="[0-9]"
             defaultValue={productPrice.retail}
+            className="text-left"
           />
           KRW
         </td>
@@ -55,7 +56,12 @@ export default function SetPrice({ setPrice, res }: Props) {
           공급가<span className="required">필수</span>
         </th>
         <td>
-          <input type="text" name="supply" defaultValue={productPrice.supply} />
+          <input
+            type="text"
+            name="supply"
+            defaultValue={productPrice.supply}
+            className="text-left"
+          />
           KRW
         </td>
       </tr>
@@ -74,6 +80,7 @@ export default function SetPrice({ setPrice, res }: Props) {
                     type="text"
                     name="price"
                     defaultValue={productPrice.price}
+                    className="text-left"
                   />
                   KRW
                 </td>

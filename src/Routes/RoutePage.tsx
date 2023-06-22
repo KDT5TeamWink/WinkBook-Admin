@@ -1,16 +1,24 @@
 import CreateProduct from '@/Components/CreateProduct/CreateProduct';
 import ProductList from '@/Components/ProductList/ProductList';
 import EditProduct from '@/Components/EditProduct/EditProduct';
+import Users from '@/Components/Users/Users';
 
-import { Routes, BrowserRouter, Route, Outlet, Link } from 'react-router-dom';
+import {
+  Routes,
+  BrowserRouter,
+  Route,
+  Outlet,
+  NavLink,
+} from 'react-router-dom';
 
-function Layout() {
+function HomeLayout() {
   return (
     <>
-      <div>
-        <Link to="/add">add</Link>
-        <Link to="/list">list</Link>
-      </div>
+      <header>
+        <NavLink to="/">Home</NavLink>
+        <NavLink to="/">상품 리스트</NavLink>
+        <NavLink to="/users">회원 리스트</NavLink>
+      </header>
       <Outlet />
     </>
   );
@@ -21,10 +29,11 @@ export default function RoutePage() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout />}>
+          <Route path="/" element={<HomeLayout />}>
+            <Route index element={<ProductList />} />
             <Route path="/add" element={<CreateProduct />} />
-            <Route path="/list" element={<ProductList />} />
             <Route path="/edit/:productNo" element={<EditProduct />} />
+            <Route path="/users" element={<Users />} />
           </Route>
         </Routes>
       </BrowserRouter>

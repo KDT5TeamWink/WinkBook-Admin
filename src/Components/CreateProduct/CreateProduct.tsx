@@ -1,9 +1,11 @@
 import SetMark from './Component/SetMark';
 import SetProductInfo from './Component/SetProductInfo';
 import SetPrice from './Component/SetPrice';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { createProduct } from '@/Apis/createProduct';
 import { getImgLink } from '@/Apis/uploadImg';
+
+import '@/Product.scss';
 
 export default function CreateProduct() {
   const [price, setPrice] = useState<Price>({} as Price);
@@ -57,32 +59,42 @@ export default function CreateProduct() {
       console.log(err);
     }
   }
-  //console.log(mark);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <>
-      <table>
-        <SetMark setMark={setMark} />
-        <SetProductInfo setInfo={setInfo} />
-        <SetPrice setPrice={setPrice} />
-      </table>
-      <div>
-        <img
-          src={imageURL}
-          alt=""
-          style={{ aspectRatio: 'auto', height: '110px' }}
-        />
-        <input type="file" accept="image/*" onChange={upload} />
-        <button
-          className="create"
-          onClick={() => {
-            console.log('mark', mark);
-            console.log('price', price);
-            console.log('info', info);
-            createItem();
-          }}
-        >
-          상품 등록하기
-        </button>
+      <h1>상품 등록</h1>
+      <div className="info-container">
+        <table>
+          <thead>
+            <tr>
+              <th className="setting" colSpan={2}>
+                표시설정
+              </th>
+            </tr>
+          </thead>
+          <SetMark setMark={setMark} />
+          <SetProductInfo setInfo={setInfo} />
+          <SetPrice setPrice={setPrice} />
+        </table>
+        <div>
+          <img
+            src={imageURL}
+            alt=""
+            style={{ aspectRatio: 'auto', height: '110px' }}
+          />
+          <input type="file" accept="image/*" onChange={upload} />
+          <button
+            className="btn"
+            onClick={() => {
+              createItem();
+            }}
+          >
+            상품 등록하기
+          </button>
+        </div>
       </div>
     </>
   );
