@@ -20,6 +20,18 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/cafe24/, ''),
       },
+      '/imgur': {
+        target: 'https://api.imgur.com/3/image',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/imgur/, ''),
+      },
+      '/iamport': {
+        target: 'https://api.iamport.kr',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/iamport/, ''),
+      },
     },
   },
 });
