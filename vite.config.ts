@@ -26,6 +26,12 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/imgur/, ''),
       },
+      '/iamport': {
+        target: 'https://api.iamport.kr',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/iamport/, ''),
+      },
     },
   },
 });
