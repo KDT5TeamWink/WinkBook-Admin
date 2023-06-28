@@ -33,6 +33,7 @@ export default function ProductList() {
   async function deleteItem(productNo: string) {
     try {
       const res = await ajax.delete(`/products/${productNo}`);
+      console.log(res.data);
       alert(`상품번호 ${productNo}이 삭제되었습니다.`);
       location.reload();
     } catch (err) {
