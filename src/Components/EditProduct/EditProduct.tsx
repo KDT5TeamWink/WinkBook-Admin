@@ -40,13 +40,14 @@ export default function EditProduct() {
       description: data.description,
       product_tag: data.product_tag,
     });
+    const category = data.category as Category[];
     setC({
       display: data.display as string,
       selling: data.selling as string,
       exposure: data.exposure_limit_type as string,
-      category: data.category[0].category_no,
-      recommand: data.category[0].recommend,
-      newProduct: data.category[0].new,
+      category: category[0].category_no + '',
+      recommand: category[0].recommend,
+      newProduct: category[0].new,
     });
   }
   useEffect(() => {

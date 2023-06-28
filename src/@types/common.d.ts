@@ -97,6 +97,7 @@ DEFAULT N */
 
 분류 번호를 사용하여 진열을 원하는 카테고리에 상품 등록 */
   add_category_no?: Category[];
+  category?: Category[];
   /** 상품코드
 
 시스템이 상품에 부여한 코드. 해당 쇼핑몰 내에서 상품코드는 중복되지 않음. */

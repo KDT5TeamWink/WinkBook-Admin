@@ -1,20 +1,14 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 
 interface Props {
-  value?: string;
+  //value?: string;
   defaultValue?: string;
   maxLength?: number;
-  onChange?: (key: ChangeEvent<HTMLInputElement>) => void;
+  //onChange?: (key: ChangeEvent<HTMLInputElement>) => void;
   id: string;
 }
 
-export default function Input({
-  value,
-  defaultValue,
-  maxLength,
-  onChange,
-  id,
-}: Props) {
+export default function Input({ defaultValue, maxLength, id }: Props) {
   const [a, setA] = useState('');
   return (
     <>

@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef, useMemo, useState } from 'react';
+import { useEffect, useCallback, useRef, useMemo } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Input from '@/Common/Input';
@@ -29,7 +29,7 @@ interface Props {
 
 export default function SetProductInfo({ setInfo, res }: Props) {
   const info = useRef({} as Info);
-  const reactQuill = useRef(null);
+  const reactQuill = useRef<ReactQuill>(null);
   const modules = useMemo(() => {
     return {
       toolbar: {
@@ -69,9 +69,13 @@ export default function SetProductInfo({ setInfo, res }: Props) {
       formData.append('image', file);
       const res = await getImgLink(formData);
 
-      const editor = reactQuill.current?.getEditor();
-      const range = editor.getSelection();
-      editor.insertEmbed(range.index, 'image', res?.data.data.link);
+      if (reactQuill.current instanceof ReactQuill) {
+        const editor = reactQuill.current.getEditor();
+        const range = editor.getSelection();
+        if (range) {
+          editor.insertEmbed(range.index, 'image', res?.data.data.link);
+        }
+      }
     });
   }
 
@@ -82,7 +86,7 @@ export default function SetProductInfo({ setInfo, res }: Props) {
       //console.log(res, info.current);
       const editor = reactQuill.current?.getEditor();
       if (res.description) {
-        editor.pasteHTML(1, res.description);
+        editor?.pasteHTML(1, res.description);
       }
     }
   }, [res]);
