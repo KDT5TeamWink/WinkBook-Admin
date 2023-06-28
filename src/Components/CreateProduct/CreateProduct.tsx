@@ -4,6 +4,7 @@ import SetPrice from './Component/SetPrice';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { createProduct } from '@/Apis/createProduct';
 import { getImgLink } from '@/Apis/uploadImg';
+import { useNavigate } from 'react-router-dom';
 
 import '@/Product.scss';
 
@@ -12,6 +13,7 @@ export default function CreateProduct() {
   const [info, setInfo] = useState<Info>({} as Info);
   const [mark, setMark] = useState<Mark>({} as Mark);
   const [imageURL, setImageURL] = useState('');
+  const navigate = useNavigate();
 
   async function upload(e: ChangeEvent<HTMLInputElement>) {
     if (!e.target.files) {
@@ -55,7 +57,9 @@ export default function CreateProduct() {
       console.log(res);
       if (res.code) throw new Error(res.message);
       alert(`상품이 등록 되었습니다. ${info.product_name}`);
+      navigate('/');
     } catch (err) {
+      alert(err);
       console.log(err);
     }
   }

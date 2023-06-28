@@ -3,7 +3,7 @@ import SetPrice from '../CreateProduct/Component/SetPrice';
 import SetProductInfo from '../CreateProduct/Component/SetProductInfo';
 
 import ajax from '@/Apis/adminAuth';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { editProduct } from '@/Apis/createProduct';
 
@@ -14,6 +14,7 @@ export default function EditProduct() {
   const [info, setInfo] = useState<Info>({} as Info);
   const [mark, setMark] = useState<Mark>({} as Mark);
   const { productNo } = useParams();
+  const navigate = useNavigate();
   const [a, setA] = useState<Price>({} as Price);
   const [b, setB] = useState<Info>({} as Info);
   const [c, setC] = useState<Mark>({} as Mark);
@@ -87,7 +88,9 @@ export default function EditProduct() {
       console.log(res);
       if (res.code) throw new Error(res.message);
       alert(`상품이 수정 되었습니다. ${info.product_name}`);
+      navigate('/');
     } catch (err) {
+      alert(err);
       console.log(err);
     }
   }
