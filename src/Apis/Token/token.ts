@@ -27,8 +27,11 @@ interface Token {
 let token: Token;
 
 export async function getToken() {
-  console.log('get');
   const params = new URLSearchParams(location.search);
+  if (params.get('code')) {
+    alert('토큰 발행을 위한 code값이 필요합니다.');
+    return;
+  }
   try {
     const { data } = await ajax.post('', {
       grant_type: 'authorization_code',
@@ -50,7 +53,6 @@ export async function getToken() {
 
 export async function refreshToken() {
   try {
-    console.log('refresh');
     const { data } = await ajax.post('', {
       grant_type: 'refresh_token',
       refresh_token: localStorage.getItem('refreshToken'),
@@ -62,7 +64,6 @@ export async function refreshToken() {
       token.refresh_token
       //token.refresh_token_expires_at
     );
-    console.log('refresh', data);
   } catch (err) {
     console.log(err);
   }

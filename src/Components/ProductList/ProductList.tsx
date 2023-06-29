@@ -9,17 +9,21 @@ export default function ProductList() {
   const [pagination, setPagination] = useState([1]);
 
   async function getList() {
-    const res = await ajax.get('/products', {
-      params: {
-        limit: 10,
-        offset: offset * 10,
-      },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    try {
+      const res = await ajax.get('/products', {
+        params: {
+          limit: 10,
+          offset: offset * 10,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-    return res;
+      return res;
+    } catch (err) {
+      console.log(err);
+    }
   }
   async function getTotalNum() {
     try {
@@ -45,14 +49,14 @@ export default function ProductList() {
     (async () => {
       const res = await getList();
       console.log(res);
-      setList(res.data.products);
+      setList(res?.data.products);
       getTotalNum();
     })();
   }, []);
   useEffect(() => {
     (async () => {
       const res = await getList();
-      setList(res.data.products);
+      setList(res?.data.products);
     })();
   }, [offset]);
 

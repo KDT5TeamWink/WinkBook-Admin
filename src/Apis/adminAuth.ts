@@ -45,8 +45,8 @@ ajax.interceptors.response.use(
       error.config.headers = {
         Authorization: `Bearer ${key.test(document.cookie) ? RegExp.$1 : ''}`,
       };
-      console.log('error', error);
-      console.log('error.config', error.config);
+      //console.log('error', error);
+      //console.log('error.config', error.config);
     }
   }
 );
