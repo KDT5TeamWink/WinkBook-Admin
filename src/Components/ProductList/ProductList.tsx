@@ -102,10 +102,10 @@ export default function ProductList() {
                   <td>{v.price.slice(0, -3)}원</td>
                   <td className="manage">
                     <Link to={`/edit/${v.product_no}`}>
-                      <button id="edit">edit</button>
+                      <button id="edit">수정</button>
                     </Link>
                     <button id="delete" value={v.product_no}>
-                      delete
+                      삭제
                     </button>
                   </td>
                 </tr>

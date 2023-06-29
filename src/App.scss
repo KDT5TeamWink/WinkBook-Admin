@@ -40,6 +40,10 @@ header {
   color: #ffffff;
   font-size: 15px;
   cursor: pointer;
+
+  &:hover {
+    box-shadow: 3px 3px 8px -3px inset black;
+  }
 }
 h1 {
   background-color: #fff;
@@ -102,6 +106,10 @@ h1 {
       border-radius: 7px;
       color: #ffffff;
       cursor: pointer;
+
+      &:hover {
+        box-shadow: 3px 3px 8px -3px inset black;
+      }
     }
     a {
       margin-bottom: 10px;
@@ -157,9 +165,16 @@ input[type='text'] {
 }
 textarea {
   width: 100%;
+  padding: 10px;
   border: 1px solid #c6c6c6;
 }
 .required {
   background-color: red;
   color: white;
+}
+#edit {
+  background-color: rgba(55, 55, 226, 0.892);
+}
+#delete {
+  background-color: rgba(235, 60, 60, 0.833);
 }
