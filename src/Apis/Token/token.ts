@@ -28,7 +28,7 @@ let token: Token;
 
 export async function getToken() {
   const params = new URLSearchParams(location.search);
-  if (params.get('code')) {
+  if (!params.get('code')) {
     alert('토큰 발행을 위한 code값이 필요합니다.');
     return;
   }
