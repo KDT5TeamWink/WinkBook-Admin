@@ -77,7 +77,7 @@ export default function Payments() {
               ))}
           </tbody>
         </table>
-        <div className="list-footer payments-pagination">
+        <div className="list-footer pagination">
           <ul
             onClick={(e) => {
               if (e.target instanceof HTMLLIElement) {

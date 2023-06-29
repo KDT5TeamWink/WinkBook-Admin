@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './Users.scss';
 
 const { VITE_USER_APIKEY, VITE_USER_USERNAME } = import.meta.env;
@@ -14,6 +14,8 @@ interface User {
 
 export default function Users() {
   const [list, setList] = useState<ResponseValue>([]);
+  const [pagination, setPagination] = useState<number[]>();
+  const userArray = useRef<ResponseValue>();
   async function userList() {
     const res = await axios.get(
       'https://asia-northeast3-heropy-api.cloudfunctions.net/api/auth/users',
@@ -27,7 +29,12 @@ export default function Users() {
       }
     );
     console.log(res);
-    setList(res.data);
+    userArray.current = res.data;
+    if (userArray.current) {
+      const page = new Array(Math.ceil(userArray.current.length / 10)).fill(1);
+      setPagination(page);
+      setList(userArray.current.slice(0, 10));
+    }
   }
 
   useEffect(() => {
@@ -63,6 +70,29 @@ export default function Users() {
               ))}
           </tbody>
         </table>
+        <div className="list-footer pagination">
+          <ul
+            onClick={(e) => {
+              if (e.target instanceof HTMLLIElement) {
+                userArray.current &&
+                  setList(
+                    userArray.current.slice(
+                      e.target.value * 10 - 9,
+                      e.target.value * 10
+                    )
+                  );
+                window.scrollTo(0, 0);
+              }
+            }}
+          >
+            {pagination &&
+              pagination.map((_, i) => (
+                <li key={i} value={i + 1}>
+                  {i + 1}
+                </li>
+              ))}
+          </ul>
+        </div>
       </div>
     </>
   );
