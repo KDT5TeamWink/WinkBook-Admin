@@ -1,12 +1,13 @@
 import axios from 'axios';
+import { getToken, refreshToken } from './Token/token';
 
 const { VITE_CAFE24_ADMIN_URL } = import.meta.env;
 
-const key = new RegExp(`accessToken=([^;]*)`);
+//const key = new RegExp(`accessToken=([^;]*)`);
 const ajax = axios.create({
   baseURL: VITE_CAFE24_ADMIN_URL,
   headers: {
-    Authorization: `Basic ${key.test(document.cookie) ? RegExp.$1 : ''}`,
+    //Authorization: `Basic ${key.test(document.cookie) ? RegExp.$1 : ''}`,
     'Content-Type': 'application/json',
   },
   data: {
@@ -18,6 +19,27 @@ const ajax = axios.create({
     },
   },
 });
+
+ajax.interceptors.request.use(
+  async (config) => {
+    const key = new RegExp(`accessToken=([^;]*)`);
+    console.log('config', config);
+    if (!key.test(document.cookie) && !localStorage.getItem('refreshToken')) {
+      await getToken();
+    } else if (!key.test(document.cookie)) {
+      await refreshToken();
+    }
+    config.headers['Authorization'] = `Bearer ${
+      key.test(document.cookie) ? RegExp.$1 : ''
+    }`;
+
+    return config;
+  },
+  (error) => {
+    console.log(error);
+    return Promise.reject(error);
+  }
+);
 
 export async function createProduct(info: ProductInfo) {
   try {
