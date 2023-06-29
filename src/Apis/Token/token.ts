@@ -25,11 +25,13 @@ interface Token {
 }
 
 let token: Token;
+let cnt = 0;
 
 export async function getToken() {
   const params = new URLSearchParams(location.search);
   if (!params.get('code')) {
-    alert('토큰 발행을 위한 code값이 필요합니다.');
+    !cnt && alert('토큰 발행을 위한 code값이 필요합니다.');
+    cnt++;
     return;
   }
   try {
@@ -48,6 +50,8 @@ export async function getToken() {
     );
   } catch (err) {
     console.log(err);
+  } finally {
+    cnt = 0;
   }
 }
 
