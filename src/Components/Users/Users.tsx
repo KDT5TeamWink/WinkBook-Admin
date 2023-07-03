@@ -78,7 +78,7 @@ export default function Users() {
                   setList(
                     userArray.current.slice(
                       e.target.value * 10 - 9,
-                      e.target.value * 10
+                      e.target.value * 10 + 1
                     )
                   );
                 window.scrollTo(0, 0);
